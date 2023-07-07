@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="food_order_form_view" model="ir.ui.view">
+        <field name="name">Food Order</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <form string="Food Order Form">
+                <header>
+                    <button string="Submit" name="submit" type="object" class="oe_highlight" states="draft"/>
+                    <button string="Draft" name="draft" type="object" class="oe_highlight" states="submit"/>
+                    <button string="In transit" name="in_transit" type="object" class="oe_highlight" states="submit"/>
+                    <button string="Order Received" name="delivered" type="object" class="oe_highlight" states="in_transit"/>
+                    <button string="Cancel" name="cancel" type="object" class="oe_highlight" states="submit"/>
+                    <field name="state" widget="statusbar" readonly="1" force_save="1"></field>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="customer_name" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                            <field name="delivery_date" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                            <field name="address" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                            <field name="contact_no" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                        </group>
+                        <group>
+                            <field name="delivery_fee" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                            <field name="amount" readonly="1" force_save="1" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                            <field name="total_amount" readonly="1" force_save="1" attrs="{'readonly':[('state', '!=', 'draft')]}"></field>
+                            <field name="reward_points" readonly="1" force_save="1" attrs="{'invisible':[('total_amount', '&lt;', '1000')]}"></field>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order List">
+                            <field name="order_ids">
+                                <tree string="Order List" editable="bottom">
+                                    <field name="item_id"></field>
+                                    <field name="price" readonly="1" force_save="1"></field>
+                                    <field name="quantity"></field>
+                                    <field name="amount" readonly="1" force_save="1"></field>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="food_order_tree_view" model="ir.ui.view">
+        <field name="name">Food Orders</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <tree string="Food Order Tree">
+                <field name="customer_name"></field>
+                <field name="delivery_date"></field>
+                <field name="address"></field>
+                <field name="contact_no"></field>
+                <field name="amount"></field>
+                <field name="delivery_fee"></field>
+                <field name="total_amount"></field>
+            </tree>
+        </field>
+    </record>
+    <record id="food_order_action" model="ir.actions.act_window">
+        <field name="name">Food Order</field>
+        <field name="res_model">food.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="food_order_root" name="Order Food" sequence="10"/>
+    <menuitem id="food_order_menu_child" name="Order Food" parent="food_order_root" sequence="10" action="food_order_action" />
+</odoo>
